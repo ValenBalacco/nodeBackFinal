@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const detalleController = require('../controllers/detalleController');
-const { authenticateToken, authorizeAdmin } = require('../auth/auth');
+const { authenticateToken, authorizeAdmin } = require('../Midleware/auth');
 
 router.get('/', detalleController.getAll);
 router.get('/:id', detalleController.getById);

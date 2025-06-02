@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const talleController = require('../controllers/talleController');
-const { authenticateToken, authorizeAdmin } = require('../auth/auth');
+const { authenticateToken, authorizeAdmin } = require('../Midleware/auth');
 
 router.get('/', talleController.getAll);
 router.get('/:id', talleController.getById);

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const descuentoController = require('../controllers/descuentoController');
-const { authenticateToken, authorizeAdmin } = require('../auth/auth');
+const { authenticateToken, authorizeAdmin } = require('../Midleware/auth');
 
 router.get('/', descuentoController.getAll);
 router.get('/:id', descuentoController.getById);
