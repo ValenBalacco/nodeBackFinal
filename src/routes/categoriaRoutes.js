@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoriaController = require('../controllers/categoriaController');
-const { authenticateToken, authorizeAdmin } = require('../middleware/auth');
+const { authenticateToken, authorizeAdmin } = require('../auth/auth');
 
 router.get('/', categoriaController.getAll);
 router.get('/:id', categoriaController.getById);

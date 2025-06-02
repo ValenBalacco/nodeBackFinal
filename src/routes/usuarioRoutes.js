@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
-const { authenticateToken, authorizeAdmin } = require('../middleware/auth');
+const { authenticateToken, authorizeAdmin } = require('../auth/auth');
 
 router.get('/', authenticateToken, authorizeAdmin, usuarioController.getAll);
 router.get('/:id', authenticateToken, authorizeAdmin, usuarioController.getById);

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const imgController = require('../controllers/imgController');
-const { authenticateToken, authorizeAdmin } = require('../middleware/auth');
+const { authenticateToken, authorizeAdmin } = require('../auth/auth');
 
 router.get('/', imgController.getAll);
 router.get('/:id', imgController.getById);
