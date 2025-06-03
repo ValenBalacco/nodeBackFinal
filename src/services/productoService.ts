@@ -8,8 +8,8 @@ const ProductoService = {
     return ProductoModel.findAll();
   },
 
-  async getById(id: number) {
-    return ProductoModel.findById(id);
+  async getById(id: number, options = {}) {
+    return ProductoModel.findById(id, options);
   },
 
   async create(data: ProductoData) {

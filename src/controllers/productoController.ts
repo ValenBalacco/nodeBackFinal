@@ -13,7 +13,7 @@ const productoController = {
 
   async getById(req: Request, res: Response): Promise<void> {
     try {
-      const producto = await ProductoService.getById(Number(req.params.id));
+      const producto = await ProductoService.getById(Number(req.params.id), { include: { detalles: true } });
       if (!producto) {
         res.status(404).json({ error: 'Producto no encontrado' });
         return;

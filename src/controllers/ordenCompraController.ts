@@ -1,11 +1,20 @@
 import { Request, Response } from 'express';
 import OrdenCompraService from '../services/ordenCompraService';
+import ProductoService from '../services/productoService'; 
 
 interface AuthRequest extends Request {
   user?: { id: number };
 }
 
-const ordenCompraController = {
+interface OrdenCompraController {
+  getAll(req: Request, res: Response): Promise<void>;
+  getById(req: Request, res: Response): Promise<void>;
+  create(req: AuthRequest, res: Response): Promise<void>;
+  update(req: Request, res: Response): Promise<void>;
+  remove(req: Request, res: Response): Promise<void>;
+}
+
+const ordenCompraController: OrdenCompraController = {
   async getAll(req: Request, res: Response): Promise<void> {
     try {
       const ordenes = await OrdenCompraService.getAll();
@@ -30,8 +39,64 @@ const ordenCompraController = {
 
   async create(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const usuarioId = req.user?.id;
-      const data = { ...req.body, usuarioId };
+      if (!req.user?.id) {
+        res.status(401).json({ error: 'Usuario no autenticado' });
+        return;
+      }
+      const usuarioId = String(req.user.id);
+      const { items, direccionEnvioId } = req.body;
+
+      let total = 0;
+
+      type ProductoConDetalles = {
+        id: number;
+        nombre: string;
+        categoriaId: number;
+        tipoProducto: any;
+        sexo: string;
+        detalles?: {
+          precio: number;
+          precios?: { precioVenta: number }[];
+        }[];
+      };
+
+      for (const item of items) {
+        const producto = await ProductoService.getById(item.productoId, {
+          include: {
+            detalles: {
+              include: { precios: true }
+            }
+          }
+        }) as ProductoConDetalles;
+
+        if (!producto || !producto.detalles || producto.detalles.length === 0) {
+          res.status(400).json({ error: `Producto con id ${item.productoId} o su detalle no encontrado` });
+          return;
+        }
+        const detalle = producto.detalles[0];
+        const precio = detalle.precios && detalle.precios[0] ? detalle.precios[0].precioVenta : detalle.precio;
+
+        if (typeof precio !== 'number' || isNaN(precio)) {
+          res.status(400).json({ error: `El producto con id ${item.productoId} no tiene precio válido` });
+          return;
+        }
+        total += precio * item.cantidad;
+      }
+
+      if (isNaN(total)) {
+        res.status(400).json({ error: 'El total de la orden no es válido.' });
+        return;
+      }
+
+      const data = {
+        usuarioId,
+        direccionEnvioId,
+        total,
+        descuento: 0,
+        fechaCompra: new Date().toISOString(),
+        items: { create: items }
+      };
+
       const nuevaOrden = await OrdenCompraService.create(data);
       res.status(201).json(nuevaOrden);
     } catch (error: any) {

@@ -13,14 +13,10 @@ class ProductoModel {
     });
   }
 
-  static async findById(id: number): Promise<(Producto & { categoria: Categoria; detalles: Detalle[]; itemsOrden: ItemOrden[] }) | null> {
+  static async findById(id: number, options = {}) {
     return prisma.producto.findUnique({
       where: { id },
-      include: {
-        categoria: true,
-        detalles: true,
-        itemsOrden: true
-      }
+      ...options
     });
   }
 

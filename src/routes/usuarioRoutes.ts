@@ -8,6 +8,7 @@ router.get('/', authenticateToken, authorizeAdmin, usuarioController.getAll);
 router.get('/:id', authenticateToken, authorizeAdmin, usuarioController.getById);
 router.post('/register', usuarioController.register);
 router.post('/login', usuarioController.login);
+router.post('/', authenticateToken, authorizeAdmin, usuarioController.create);
 router.put('/:id', authenticateToken, authorizeAdmin, usuarioController.update);
 router.delete('/:id', authenticateToken, authorizeAdmin, usuarioController.remove);
 

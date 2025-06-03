@@ -31,7 +31,32 @@ const usuarioController = {
 
   async create(req: Request, res: Response): Promise<void> {
     try {
-      const nuevoUsuario = await UsuarioService.create(req.body);
+      const { nombre, email, contraseña, dni, rol } = req.body;
+
+    
+      if (!nombre || !email || !contraseña || !dni) {
+        res.status(400).json({ error: 'Faltan campos obligatorios' });
+        return;
+      }
+
+      const existente = await UsuarioService.findByEmail(email);
+      if (existente) {
+        res.status(400).json({ error: 'El email ya está registrado' });
+        return;
+      }
+
+      const hashedPassword = await bcrypt.hash(contraseña, 10);
+
+    
+      const nuevoUsuario = await UsuarioService.create({
+        id: uuidv4(),
+        nombre,
+        email,
+        contraseña: hashedPassword,
+        dni,
+        rol: rol || 'CLIENTE'
+      });
+
       res.status(201).json(nuevoUsuario);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
@@ -94,7 +119,7 @@ const usuarioController = {
       const hashedPassword = await bcrypt.hash(contraseña, 10);
 
       const nuevoUsuario = await UsuarioService.create({
-        id: uuidv4(), // <-- obligatorio
+        id: uuidv4(), 
         nombre,
         email,
         contraseña: hashedPassword,

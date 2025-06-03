@@ -1,4 +1,4 @@
-import { PrismaClient, OrdenCompra, Usuario, Direccion, ItemOrden } from '@prisma/client';
+import { PrismaClient, Prisma, OrdenCompra, Usuario, Direccion, ItemOrden } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -24,7 +24,7 @@ class OrdenCompraModel {
     });
   }
 
-  static async create(data: Omit<OrdenCompra, 'id'>): Promise<OrdenCompra> {
+  static async create(data: Prisma.OrdenCompraUncheckedCreateInput & { items?: { create: any[] } }): Promise<OrdenCompra> {
     return prisma.ordenCompra.create({
       data
     });
