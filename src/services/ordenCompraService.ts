@@ -12,6 +12,10 @@ const OrdenCompraService = {
     return OrdenCompraModel.findById(id);
   },
 
+  async getByUsuario(usuarioId: string) { // NUEVO
+    return OrdenCompraModel.findByUsuario(usuarioId);
+  },
+
   async create(data: OrdenCompraData) {
     return OrdenCompraModel.create(data);
   },

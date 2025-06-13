@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma, OrdenCompra, Usuario, Direccion, ItemOrden } from '@prisma/client';
+import { PrismaClient, Prisma, OrdenCompra } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -21,6 +21,18 @@ class OrdenCompraModel {
         direccionEnvio: true,
         items: true
       }
+    });
+  }
+
+  static async findByUsuario(usuarioId: string) { // NUEVO
+    return prisma.ordenCompra.findMany({
+      where: { usuarioId },
+      include: {
+        usuario: true,
+        direccionEnvio: true,
+        items: true
+      },
+      orderBy: { fechaCompra: 'desc' }
     });
   }
 

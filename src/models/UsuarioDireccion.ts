@@ -24,6 +24,13 @@ class UsuarioDireccionModel {
     });
   }
 
+  static async findByUsuarioId(usuarioId: string): Promise<(UsuarioDireccion & { direccion: Direccion })[]> {
+    return prisma.usuarioDireccion.findMany({
+      where: { usuarioId },
+      include: { direccion: true }
+    });
+  }
+
   static async create(data: Omit<UsuarioDireccion, 'id'>): Promise<UsuarioDireccion> {
     return prisma.usuarioDireccion.create({
       data

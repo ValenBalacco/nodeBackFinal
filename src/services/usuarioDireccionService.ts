@@ -19,6 +19,9 @@ const UsuarioDireccionService = {
   async update(id: number, data: Partial<UsuarioDireccionData>) {
     return UsuarioDireccionModel.update(id, data);
   },
+  async getByUsuarioId(usuarioId: string) {
+  return UsuarioDireccionModel.findByUsuarioId(usuarioId);
+},
 
   async remove(id: number) {
     return UsuarioDireccionModel.delete(id);

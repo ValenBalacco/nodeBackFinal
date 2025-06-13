@@ -80,7 +80,6 @@ const usuarioController = {
       res.status(400).json({ error: error.message });
     }
   },
-
   async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, contraseña } = req.body;
@@ -101,11 +100,12 @@ const usuarioController = {
         JWT_SECRET,
         { expiresIn: '1d' }
       );
-      res.json({ token });
+      res.json({ usuario, token }); // <--- ¡Respuesta correcta!
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   },
+
 
   async register(req: Request, res: Response): Promise<void> {
     try {

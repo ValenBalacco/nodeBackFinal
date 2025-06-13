@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/', authenticateToken, authorizeAdmin, ordenCompraController.getAll);
 router.get('/:id', authenticateToken, authorizeAdmin, ordenCompraController.getById);
+router.get('/usuario/:usuarioId', authenticateToken, ordenCompraController.getByUsuario); // NUEVA RUTA
 router.post('/', authenticateToken, ordenCompraController.create);
 router.put('/:id', authenticateToken, authorizeAdmin, ordenCompraController.update);
 router.delete('/:id', authenticateToken, authorizeAdmin, ordenCompraController.remove);

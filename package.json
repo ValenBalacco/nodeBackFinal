@@ -19,8 +19,10 @@
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mercadopago": "^2.7.0",
     "uuid": "^11.1.0"
   }
 }

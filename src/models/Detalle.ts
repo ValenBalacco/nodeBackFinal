@@ -1,12 +1,16 @@
-import { PrismaClient, Detalle, Producto, Talle, Img, Precio } from '@prisma/client';
+import { PrismaClient, Detalle, Producto, Talle, Img, Precio, Categoria } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 class DetalleModel {
-  static async findAll(): Promise<(Detalle & { producto: Producto; talle: Talle; imgs: Img[]; precios: Precio[] })[]> {
+  static async findAll(): Promise<(Detalle & { producto: Producto & { categoria: Categoria | null }; talle: Talle; imgs: Img[]; precios: Precio[] })[]> {
     return prisma.detalle.findMany({
       include: {
-        producto: true,
+        producto: {
+          include: {
+            categoria: true
+          }
+        },
         talle: true,
         imgs: true,
         precios: true
@@ -14,11 +18,15 @@ class DetalleModel {
     });
   }
 
-  static async findById(id: number): Promise<(Detalle & { producto: Producto; talle: Talle; imgs: Img[]; precios: Precio[] }) | null> {
+  static async findById(id: number): Promise<(Detalle & { producto: Producto & { categoria: Categoria | null }; talle: Talle; imgs: Img[]; precios: Precio[] }) | null> {
     return prisma.detalle.findUnique({
       where: { id },
       include: {
-        producto: true,
+        producto: {
+          include: {
+            categoria: true
+          }
+        },
         talle: true,
         imgs: true,
         precios: true

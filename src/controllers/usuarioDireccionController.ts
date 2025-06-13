@@ -6,6 +6,7 @@ interface AuthRequest extends Request {
 }
 
 const usuarioDireccionController = {
+  // Obtiene todas las relaciones (admin, opcional)
   async getAll(req: Request, res: Response): Promise<void> {
     try {
       const direcciones = await UsuarioDireccionService.getAll();
@@ -15,6 +16,7 @@ const usuarioDireccionController = {
     }
   },
 
+  // Obtiene una relación por su ID (admin, opcional)
   async getById(req: Request, res: Response): Promise<void> {
     try {
       const direccion = await UsuarioDireccionService.getById(Number(req.params.id));
@@ -28,6 +30,22 @@ const usuarioDireccionController = {
     }
   },
 
+  // Obtiene todas las direcciones para un usuario por su ID (ESTE ES EL QUE USA TU FRONT)
+  async getByUsuarioId(req: Request, res: Response): Promise<void> {
+    try {
+      const usuarioId = req.params.usuarioId;
+      if (!usuarioId) {
+        res.status(400).json({ error: "usuarioId requerido" });
+        return;
+      }
+      const relaciones = await UsuarioDireccionService.getByUsuarioId(usuarioId);
+      res.json(relaciones);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  // Crea una relación usuario-dirección
   async create(req: AuthRequest, res: Response): Promise<void> {
     try {
       const usuarioId = req.user?.id;
@@ -39,6 +57,7 @@ const usuarioDireccionController = {
     }
   },
 
+  // Actualiza una relación
   async update(req: Request, res: Response): Promise<void> {
     try {
       const direccionActualizada = await UsuarioDireccionService.update(Number(req.params.id), req.body);
@@ -48,6 +67,7 @@ const usuarioDireccionController = {
     }
   },
 
+  // Elimina una relación
   async remove(req: Request, res: Response): Promise<void> {
     try {
       await UsuarioDireccionService.remove(Number(req.params.id));

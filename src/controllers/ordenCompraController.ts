@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import OrdenCompraService from '../services/ordenCompraService';
-import ProductoService from '../services/productoService'; 
+import ProductoService from '../services/productoService';
 
 interface AuthRequest extends Request {
   user?: { id: number };
@@ -9,6 +9,7 @@ interface AuthRequest extends Request {
 interface OrdenCompraController {
   getAll(req: Request, res: Response): Promise<void>;
   getById(req: Request, res: Response): Promise<void>;
+  getByUsuario(req: Request, res: Response): Promise<void>;
   create(req: AuthRequest, res: Response): Promise<void>;
   update(req: Request, res: Response): Promise<void>;
   remove(req: Request, res: Response): Promise<void>;
@@ -32,6 +33,17 @@ const ordenCompraController: OrdenCompraController = {
         return;
       }
       res.json(orden);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  // NUEVO MÉTODO
+  async getByUsuario(req: Request, res: Response): Promise<void> {
+    try {
+      const usuarioId = req.params.usuarioId;
+      const ordenes = await OrdenCompraService.getByUsuario(usuarioId);
+      res.json(ordenes);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
